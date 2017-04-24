@@ -12,9 +12,189 @@ namespace TomasuloSimulator
 {
     public partial class Form1 : Form
     {
+        private State curr_state;
+
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox5_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private List<Instruction> Parse(String code)
+        {
+            List<Instruction> Ins = new List<Instruction>();
+            foreach (String line in code.Split('\n'))
+            {
+                String[] spans = line.Split();
+                Instruction ins = new Instruction();
+                switch (spans[0].ToUpper())
+                {
+                    case "L.D":
+                        ins.op = OpType.LD;
+                        break;
+                    case "ADD.D":
+                        ins.op = OpType.ADD;
+                        break;
+                    case "SUB.D":
+                        ins.op = OpType.SUB;
+                        break;
+                    case "MULT.D":
+                        ins.op = OpType.MUL;
+                        break;
+                    case "DIV.D":
+                        ins.op = OpType.DIV;
+                        break;
+                    default:
+                        throw new Exception("Invalid instruction");
+                }
+                ins.o1 = int.Parse(spans[1].Substring(1));
+                if (ins.op == OpType.LD)
+                    ins.o2 = int.Parse(spans[2]);
+                else
+                    ins.o2 = int.Parse(spans[2].Substring(1));
+                ins.o3 = int.Parse(spans[3].Substring(1));
+                Ins.Add(ins);
+            }
+            return Ins;
+        }
+
+        private String OpName(OpType op)
+        {
+            switch (op)
+            {
+                case OpType.LD:
+                    return "L.D";
+                case OpType.ADD:
+                    return "ADD.D";
+                case OpType.SUB:
+                    return "SUB.D";
+                case OpType.MUL:
+                    return "MULT.D";
+                case OpType.DIV:
+                    return "DIV.D";
+            }
+            return "";
+        }
+
+        private void ShowState(State s)
+        {
+            label9.Text = "当前周期：" + CPU.cycle.ToString();
+            dataGridView1.Rows.Clear();
+            foreach (Instruction ins in s.Ins)
+            {
+                dataGridView1.Rows.Add(ins.ToString(),
+                    ins.issue_time > 0 ? ins.issue_time.ToString() : "",
+                    ins.exec_start_time > 0 ? ins.exec_start_time.ToString() : "",
+                    ins.exec_end_time > 0 ? ins.exec_end_time.ToString() : "",
+                    ins.wb_time > 0 ? ins.wb_time.ToString() : "");
+            }
+            dataGridView3.Rows.Clear();
+            foreach (LoadUnit lu in s.LU)
+            {
+                if (lu.busy)
+                    dataGridView3.Rows.Add(lu.time == 0 ? "" : lu.time.ToString(), lu.name, "Yes", lu.address, lu.result == null ? "" : lu.result.v);
+                else
+                    dataGridView3.Rows.Add("", lu.name, "No", "", "");
+            }
+            dataGridView2.Rows.Clear();
+            foreach (ReserveStation rs in s.RS)
+            {
+                if (rs.busy)
+                {
+                    dataGridView2.Rows.Add(rs.time == 0 ? "" : rs.time.ToString(), rs.name, "Yes",
+                        OpName(rs.ins.op), rs.Vj, rs.Vk, rs.Qj, rs.Qk);
+                }
+                else
+                {
+                    dataGridView2.Rows.Add("", rs.name, "No",
+                        "", "", "", "", "");
+                }
+            }
+            dataGridView4.Rows.Clear();
+            dataGridView4.Rows.Add("Qi");
+            dataGridView4.Rows.Add("值");
+            for (int i = 0; i < 16; i++)
+            {
+                if (s.Reg[i].Qi != null)
+                    dataGridView4.Rows[0].Cells[i + 1].Value = s.Reg[i].Qi.name;
+                if (s.Reg[i].value != null)
+                    dataGridView4.Rows[1].Cells[i + 1].Value = s.Reg[i].value.ToString();
+            }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (CPU.cycle == 0)
+            {
+                String code = textBox1.Text;
+                try
+                {
+                    CPU.load_time = (int)numericUpDown1.Value;
+                    CPU.add_time = (int)numericUpDown2.Value;
+                    CPU.mul_time = (int)numericUpDown3.Value;
+                    CPU.div_time = (int)numericUpDown4.Value;
+                    curr_state = new State(Parse(code));
+                }
+                catch (Exception ee)
+                {
+                    MessageBox.Show("输入格式有误");
+                    return;
+                }
+                textBox1.Enabled = false;
+                numericUpDown1.Enabled = false;
+                numericUpDown2.Enabled = false;
+                numericUpDown3.Enabled = false;
+                numericUpDown4.Enabled = false;
+            }
+
+            CPU.cycle++;
+            curr_state.step();
+            ShowState(curr_state);
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Enabled = true;
+            numericUpDown1.Enabled = true;
+            numericUpDown2.Enabled = true;
+            numericUpDown3.Enabled = true;
+            numericUpDown4.Enabled = true;
+            CPU.cycle = 0;
+            dataGridView1.Rows.Clear();
+            dataGridView2.Rows.Clear();
+            dataGridView3.Rows.Clear();
+            dataGridView4.Rows.Clear();
+            label9.Text = "";
         }
     }
 }
