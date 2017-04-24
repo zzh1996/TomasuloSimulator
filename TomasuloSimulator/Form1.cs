@@ -44,6 +44,8 @@ namespace TomasuloSimulator
             List<Instruction> Ins = new List<Instruction>();
             foreach (String line in code.Split('\n'))
             {
+                if (line.Length == 0 || line[0] == ';')
+                    continue;
                 String[] spans = line.Split();
                 Instruction ins = new Instruction();
                 switch (spans[0].ToUpper())
@@ -63,15 +65,25 @@ namespace TomasuloSimulator
                     case "DIV.D":
                         ins.op = OpType.DIV;
                         break;
+                    case "BNEZ":
+                        ins.op = OpType.BNEZ;
+                        break;
                     default:
                         throw new Exception("Invalid instruction");
                 }
-                ins.o1 = int.Parse(spans[1].Substring(1));
-                if (ins.op == OpType.LD)
-                    ins.o2 = int.Parse(spans[2]);
+                if (ins.op != OpType.BNEZ)
+                {
+                    ins.o1 = int.Parse(spans[1].Substring(1));
+                    if (ins.op == OpType.LD)
+                        ins.o2 = int.Parse(spans[2]);
+                    else
+                        ins.o2 = int.Parse(spans[2].Substring(1));
+                    ins.o3 = int.Parse(spans[3].Substring(1));
+                }
                 else
-                    ins.o2 = int.Parse(spans[2].Substring(1));
-                ins.o3 = int.Parse(spans[3].Substring(1));
+                {
+                    ins.o2 = int.Parse(spans[1].Substring(1));
+                }
                 Ins.Add(ins);
             }
             return Ins;
@@ -91,6 +103,8 @@ namespace TomasuloSimulator
                     return "MULT.D";
                 case OpType.DIV:
                     return "DIV.D";
+                case OpType.BNEZ:
+                    return "BNEZ";
             }
             return "";
         }
@@ -140,6 +154,7 @@ namespace TomasuloSimulator
                     dataGridView4.Rows[1].Cells[i + 1].Value = s.Reg[i].value.ToString();
             }
             textBox2.Text = Value.text;
+            label10.Text = s.BranchWaitingFor == null ? "" : "跳转指令等待：" + s.BranchWaitingFor.ToString();
         }
 
         private bool prepare_data()
@@ -218,6 +233,8 @@ namespace TomasuloSimulator
             dataGridView3.Rows.Clear();
             dataGridView4.Rows.Clear();
             textBox2.Text = "";
+            numericUpDown5.Value = 1;
+            label10.Text = "";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -233,6 +250,11 @@ namespace TomasuloSimulator
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
             runto((int)numericUpDown5.Value);
+        }
+
+        private void groupBox4_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

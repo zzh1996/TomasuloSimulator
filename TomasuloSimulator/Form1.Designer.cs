@@ -40,6 +40,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -68,6 +71,11 @@
             this.F28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.F30 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.LoadTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Load名称 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LoadBusy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.地址 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.值 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.名称 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -83,14 +91,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.LoadTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Load名称 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LoadBusy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.地址 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.值 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -98,13 +99,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -263,6 +264,49 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "控制";
             // 
+            // numericUpDown5
+            // 
+            this.numericUpDown5.Location = new System.Drawing.Point(67, 50);
+            this.numericUpDown5.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown5.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown5.Name = "numericUpDown5";
+            this.numericUpDown5.Size = new System.Drawing.Size(95, 21);
+            this.numericUpDown5.TabIndex = 15;
+            this.numericUpDown5.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown5.ValueChanged += new System.EventHandler(this.numericUpDown5_ValueChanged);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(87, 20);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 14;
+            this.button3.Text = "后退";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(168, 20);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 13;
+            this.button2.Text = "退出";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -340,6 +384,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.dataGridView4);
             this.groupBox4.Controls.Add(this.dataGridView3);
             this.groupBox4.Controls.Add(this.dataGridView2);
@@ -354,6 +399,7 @@
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "模拟结果";
+            this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
             // 
             // dataGridView4
             // 
@@ -525,6 +571,39 @@
             this.dataGridView3.Size = new System.Drawing.Size(384, 96);
             this.dataGridView3.TabIndex = 10;
             // 
+            // LoadTime
+            // 
+            this.LoadTime.HeaderText = "Time";
+            this.LoadTime.Name = "LoadTime";
+            this.LoadTime.ReadOnly = true;
+            this.LoadTime.Width = 50;
+            // 
+            // Load名称
+            // 
+            this.Load名称.HeaderText = "名称";
+            this.Load名称.Name = "Load名称";
+            this.Load名称.ReadOnly = true;
+            this.Load名称.Width = 80;
+            // 
+            // LoadBusy
+            // 
+            this.LoadBusy.HeaderText = "Busy";
+            this.LoadBusy.Name = "LoadBusy";
+            this.LoadBusy.ReadOnly = true;
+            this.LoadBusy.Width = 50;
+            // 
+            // 地址
+            // 
+            this.地址.HeaderText = "地址";
+            this.地址.Name = "地址";
+            this.地址.ReadOnly = true;
+            // 
+            // 值
+            // 
+            this.值.HeaderText = "值";
+            this.值.Name = "值";
+            this.值.ReadOnly = true;
+            // 
             // dataGridView2
             // 
             this.dataGridView2.AllowUserToAddRows = false;
@@ -663,81 +742,14 @@
             this.groupBox5.Text = "备注";
             this.groupBox5.Enter += new System.EventHandler(this.groupBox5_Enter);
             // 
-            // LoadTime
+            // label10
             // 
-            this.LoadTime.HeaderText = "Time";
-            this.LoadTime.Name = "LoadTime";
-            this.LoadTime.ReadOnly = true;
-            this.LoadTime.Width = 50;
-            // 
-            // Load名称
-            // 
-            this.Load名称.HeaderText = "名称";
-            this.Load名称.Name = "Load名称";
-            this.Load名称.ReadOnly = true;
-            this.Load名称.Width = 80;
-            // 
-            // LoadBusy
-            // 
-            this.LoadBusy.HeaderText = "Busy";
-            this.LoadBusy.Name = "LoadBusy";
-            this.LoadBusy.ReadOnly = true;
-            this.LoadBusy.Width = 50;
-            // 
-            // 地址
-            // 
-            this.地址.HeaderText = "地址";
-            this.地址.Name = "地址";
-            this.地址.ReadOnly = true;
-            // 
-            // 值
-            // 
-            this.值.HeaderText = "值";
-            this.值.Name = "值";
-            this.值.ReadOnly = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(168, 20);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 13;
-            this.button2.Text = "退出";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(87, 20);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 14;
-            this.button3.Text = "后退";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // numericUpDown5
-            // 
-            this.numericUpDown5.Location = new System.Drawing.Point(67, 50);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(95, 21);
-            this.numericUpDown5.TabIndex = 15;
-            this.numericUpDown5.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown5.ValueChanged += new System.EventHandler(this.numericUpDown5_ValueChanged);
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(833, 188);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(101, 12);
+            this.label10.TabIndex = 12;
+            this.label10.Text = "跳转指令等待：无";
             // 
             // Form1
             // 
@@ -764,6 +776,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
@@ -772,7 +785,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -842,6 +854,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.NumericUpDown numericUpDown5;
+        private System.Windows.Forms.Label label10;
     }
 }
 

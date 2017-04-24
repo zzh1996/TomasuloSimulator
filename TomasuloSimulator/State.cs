@@ -17,6 +17,8 @@ namespace TomasuloSimulator
         public List<LoadUnit> LU;
         public List<Instruction> Ins;
         public int NextToIssue;
+        public bool branch;
+        public Unit BranchWaitingFor;
 
         public State(List<Instruction> Ins)
         {
@@ -76,6 +78,14 @@ namespace TomasuloSimulator
                 {
                     rs.Qk = null;
                     rs.Vk = v;
+                }
+            }
+
+            if (BranchWaitingFor != null)
+            {
+                if (Object.ReferenceEquals(BranchWaitingFor, u))
+                {
+                    BranchWaitingFor = null;
                 }
             }
         }
@@ -141,7 +151,14 @@ namespace TomasuloSimulator
                 }
             }
 
-            if (NextToIssue < Ins.Count)
+            if (branch && BranchWaitingFor == null)
+            {
+                Ins[NextToIssue - 1].exec_start_time = CPU.cycle;
+                Ins[NextToIssue - 1].exec_end_time = CPU.cycle;
+                branch = false;
+            }
+
+            if (NextToIssue < Ins.Count && BranchWaitingFor == null)
             {
                 switch (Ins[NextToIssue].op)
                 {
@@ -160,6 +177,12 @@ namespace TomasuloSimulator
                                 break;
                             }
                         }
+                        break;
+                    case OpType.BNEZ:
+                        Ins[NextToIssue].issue_time = CPU.cycle;
+                        branch = true;
+                        BranchWaitingFor = Reg[Ins[NextToIssue].o2 / 2].Qi;
+                        NextToIssue++;
                         break;
                     default:
                         int start, end;
@@ -221,7 +244,7 @@ namespace TomasuloSimulator
 
     enum OpType
     {
-        LD, ADD, SUB, MUL, DIV
+        LD, ADD, SUB, MUL, DIV, BNEZ
     }
 
     class Value
@@ -323,6 +346,8 @@ namespace TomasuloSimulator
                     return String.Format("MULT.D F{0},F{1},F{2}", o1, o2, o3);
                 case OpType.DIV:
                     return String.Format("DIV.D F{0},F{1},F{2}", o1, o2, o3);
+                case OpType.BNEZ:
+                    return String.Format("BNEZ F{0}", o2);
             }
             return "";
         }
