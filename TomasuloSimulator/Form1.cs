@@ -97,7 +97,7 @@ namespace TomasuloSimulator
 
         private void ShowState(State s)
         {
-            label9.Text = "当前周期：" + CPU.cycle.ToString();
+            numericUpDown5.Value = CPU.cycle;
             dataGridView1.Rows.Clear();
             foreach (Instruction ins in s.Ins)
             {
@@ -139,37 +139,60 @@ namespace TomasuloSimulator
                 if (s.Reg[i].value != null)
                     dataGridView4.Rows[1].Cells[i + 1].Value = s.Reg[i].value.ToString();
             }
+            textBox2.Text = Value.text;
+        }
 
+        private bool prepare_data()
+        {
+            String code = textBox1.Text;
+            try
+            {
+                CPU.load_time = (int)numericUpDown1.Value;
+                CPU.add_time = (int)numericUpDown2.Value;
+                CPU.mul_time = (int)numericUpDown3.Value;
+                CPU.div_time = (int)numericUpDown4.Value;
+                Value.text = "";
+                Value.count = 0;
+                curr_state = new State(Parse(code));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("输入格式有误");
+                return false;
+            }
+            return true;
+        }
+
+        private void runto(int cycle)
+        {
+            textBox1.Enabled = false;
+            numericUpDown1.Enabled = false;
+            numericUpDown2.Enabled = false;
+            numericUpDown3.Enabled = false;
+            numericUpDown4.Enabled = false;
+            if (cycle > 0)
+            {
+                if (cycle < CPU.cycle || CPU.cycle == 0)
+                {
+                    if (!prepare_data())
+                    {
+                        reset();
+                        return;
+                    }
+                    CPU.cycle = 0;
+                }
+                while (cycle > CPU.cycle)
+                {
+                    CPU.cycle++;
+                    curr_state.step();
+                }
+            }
+            ShowState(curr_state);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (CPU.cycle == 0)
-            {
-                String code = textBox1.Text;
-                try
-                {
-                    CPU.load_time = (int)numericUpDown1.Value;
-                    CPU.add_time = (int)numericUpDown2.Value;
-                    CPU.mul_time = (int)numericUpDown3.Value;
-                    CPU.div_time = (int)numericUpDown4.Value;
-                    curr_state = new State(Parse(code));
-                }
-                catch (Exception ee)
-                {
-                    MessageBox.Show("输入格式有误");
-                    return;
-                }
-                textBox1.Enabled = false;
-                numericUpDown1.Enabled = false;
-                numericUpDown2.Enabled = false;
-                numericUpDown3.Enabled = false;
-                numericUpDown4.Enabled = false;
-            }
-
-            CPU.cycle++;
-            curr_state.step();
-            ShowState(curr_state);
+            runto(CPU.cycle + 1);
         }
 
         private void label9_Click(object sender, EventArgs e)
@@ -182,7 +205,7 @@ namespace TomasuloSimulator
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void reset()
         {
             textBox1.Enabled = true;
             numericUpDown1.Enabled = true;
@@ -194,7 +217,22 @@ namespace TomasuloSimulator
             dataGridView2.Rows.Clear();
             dataGridView3.Rows.Clear();
             dataGridView4.Rows.Clear();
-            label9.Text = "";
+            textBox2.Text = "";
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            reset();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            runto(CPU.cycle - 1);
+        }
+
+        private void numericUpDown5_ValueChanged(object sender, EventArgs e)
+        {
+            runto((int)numericUpDown5.Value);
         }
     }
 }
